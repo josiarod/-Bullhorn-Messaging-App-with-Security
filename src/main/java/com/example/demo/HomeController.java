@@ -52,7 +52,11 @@ public class HomeController {
 
 
     @RequestMapping("/")
-    public String index(){
+    public String index(Model model){
+        model.addAttribute("twitts",  twittRepository.findAll());
+
+        model.addAttribute("user", userRepository.findAll());
+
         return "index";
     }
 
@@ -63,34 +67,53 @@ public class HomeController {
 
     ////////////////////////////////BULLHORN///////////////////////////
     @RequestMapping("/list")
-    public String listTwitts(Model model){
+    public String listTwitts(Model model, Principal principal){
         model.addAttribute("twitts",  twittRepository.findAll());
+        model.addAttribute("user_id",userRepository.findByUsername(principal.getName()).getId());
         return "list";
     }
 
     @GetMapping("/add")
-    public String  twittForm(Model model){
+    public String  twittForm(Model model, Principal principal){
         model.addAttribute("twitt", new  Twitt());
+        model.addAttribute("user_id",userRepository.findByUsername(principal.getName()).getId());
         return "twittform";
     }
 
     @PostMapping("/add")
-    public String processTwitt(@ModelAttribute Twitt twitt,
-                               @RequestParam("file") MultipartFile file) {
-        if (file.isEmpty()) {
-            return "redirect:/add";
+    public String processTwitt(@Valid @ModelAttribute Twitt twitt, BindingResult result,
+                              @RequestParam("file") MultipartFile file,
+                             @RequestParam("twitt_user_id") long twitt_user_id, Principal principal) {
+        if (result.hasErrors()) {
+            return "twittform";
         }
-        try {
-            Map uploadResult = cloudc.upload(file.getBytes(),
-                    ObjectUtils.asMap("resourcetype", "auto"));
-            twitt.setImage(uploadResult.get("url").toString());
-            twittRepository.save(twitt);
 
-        } catch (IOException e) {
-            e.printStackTrace();
-            return "redirect:/add";
+        if (file.isEmpty()) {
+
+
+        } else {
+            try {
+                Map uploadResult = cloudc.upload(file.getBytes(),
+                        ObjectUtils.asMap("resourcetype", "auto"));
+                twitt.setImage(uploadResult.get("url").toString());
+                twittRepository.save(twitt);
+            } catch (IOException e) {
+                e.printStackTrace();
+                return "redirect:/add";
+            }
         }
+//        carRepository.save(car);
+//        return "redirect:/index1";
+
+
+
+        User user = userRepository.findById(twitt_user_id).get();
+        twitt.setUser(user);
+
+
+        twittRepository.save(twitt);
         return "redirect:/";
+
     }
 
 

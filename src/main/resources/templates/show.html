@@ -5,8 +5,9 @@
     <title>Todo App</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="/css3/styles.css">
+
 </head>
-<body>
+<body class="bg">
 <nav  class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
     <div class="container">
         <a class="navbar-brand" href="/">JR</a>
@@ -31,7 +32,7 @@
 </nav>
 
 
-<div class="container" style="background-color: powderblue;">
+<div class="container" >
     <h2 class="text-center" style="color: darkblue">Twitt List</h2><br/>
 
 <div class="card-columns">
@@ -44,12 +45,13 @@
                 <h4 class="card-title" th:text="${twitt.title}"></h4>
                 <h4 class="card-title" th:text="${twitt.content}"></h4>
                 <p class="card-text" th:text="${twitt.posteddate}"></p>
-                <p class="card-text" th:text="${twitt.sentby}"></p>
+
             </div>
             <td>
 
                 <a th:href="@{/update/{id}(id=${twitt.id})}" class="btn btn-primary" >Update</a>
                 <a th:href="@{/delete/{id}(id=${twitt.id})}" class="btn btn-primary">Delete</a>
+
             </td></tr>
         </div>
     </div>

@@ -1,10 +1,7 @@
 package com.example.demo;
 
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -23,15 +20,17 @@ public class Twitt {
     @Size(min=1)
     private String posteddate;
 
-    @NotNull
-    @Size(min=1)
-    private String sentby;
+
 
     @NotNull
     @Size(min=1)
     private String title;
     
     private String image;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
 
     public long getId() {
         return id;
@@ -50,14 +49,6 @@ public class Twitt {
     }
 
 
-
-    public String getSentby() {
-        return sentby;
-    }
-
-    public void setSentby(String sentby) {
-        this.sentby = sentby;
-    }
 
     public String getPosteddate() {
         return posteddate;
@@ -82,6 +73,15 @@ public class Twitt {
     public void setTitle(String title) {
         this.title = title;
     }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
     //
 //    public void image(String url) {
 //    }
